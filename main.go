@@ -90,6 +90,10 @@ func main(){
 			}
 
 			i++
+			if i > 500{
+				Info.Println("have gotten the 25w users.")
+				break
+			}
 			// break
 		}
 	}()
@@ -146,7 +150,10 @@ func main(){
 					})
 
 					for _,x := range out.([]interface{})[1].(map[string]interface{})["holders"].([]interface{}){
-						x.(map[string]interface{})["owner"].(string)
+						err = rc.SAdd("forloopsend",x.(map[string]interface{})["owner"].(string)).Err()
+						if err != nil {
+							panic(err)
+						}
 					}
 
 				}()
