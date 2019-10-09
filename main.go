@@ -68,7 +68,7 @@ func main(){
 
 	tc2 := time.NewTicker(time.Second * 3)
 	go func(){
-		i := 0
+		i := 49
 		for{
 			select {
 			
