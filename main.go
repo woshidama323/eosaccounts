@@ -157,6 +157,7 @@ func main(){
 					for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
 						err = rc.SAdd("forloopsend",x.(map[string]interface{})["owner"].(string)).Err()
 						if err != nil {
+							Info.Println("get errors ??...",err)
 							panic(err)
 						}
 					}
