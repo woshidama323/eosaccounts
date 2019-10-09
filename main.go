@@ -140,8 +140,8 @@ func main(){
 			// 	Info.Println("start msg")
 			// }
 			case []interface{}:
-				Info.Println("______",out)
-				go func(){
+				// Info.Println("______",out)
+				go func(input interface{}){
 					// 
 					rc := redis.NewClient(&redis.Options{
 						Addr:     "localhost:6379",
@@ -149,14 +149,19 @@ func main(){
 						DB:       14,//14,  // use default DB
 					})
 
-					for _,x := range out.([]interface{})[1].(map[string]interface{})["holders"].([]interface{}){
+					getholder := input.([]interface{})[1].(string)
+					Info.Println(getholder)
+
+					var test interface{}
+					json.Unmarshal([]byte(getholder),&test)
+					for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
 						err = rc.SAdd("forloopsend",x.(map[string]interface{})["owner"].(string)).Err()
 						if err != nil {
 							panic(err)
 						}
 					}
 
-				}()
+				}(out)
 
 		default:
 			Info.Println("Unsupported message", m)
