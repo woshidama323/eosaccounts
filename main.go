@@ -113,11 +113,12 @@ func main(){
 
 		var out interface{}
 
-		if string(msg[:1]) == "3"{
-			Info.Println("ping pong msg:",string(msg))
-			continue
+		// if string(msg[:1]) == "3"{
+		// 	Info.Println("ping pong msg:",string(msg))
+		// 	continue
 
-		}else if string(msg[:2]) == "42"{
+		// }else 
+		if string(msg[:2]) == "42"{
 			Info.Println("accounts msg")
 			err := json.Unmarshal(msg[2:],&out)
 			if err !=nil {
