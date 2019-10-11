@@ -4,8 +4,14 @@ go:
 
 sudo : required
 
+
+env : 
+  - GO111MODULE=on
+  
 install : 
   - echo "install"
 
-script : go test
+
+script : 
  - echo "script"
+ - go test -v ./...
