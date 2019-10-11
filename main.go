@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"github.com/go-redis/redis"
+	"flag"
 )
 var (
 	Info    *log.Logger
@@ -21,6 +22,10 @@ func init(){
 }
 func main(){
 
+	start := flag.Int("start",1,"起始页")
+	stop := flag.Int("stop",500,"终止页")
+
+	flag.Parse()
 	u := url.URL{Scheme:"wss",Host:"api-v1.eosflare.io",Path:"/socket.io/",}
 	v := url.Values{}
 	v.Add("EIO","3")
@@ -68,7 +73,7 @@ func main(){
 
 	tc2 := time.NewTicker(time.Second * 3)
 	go func(){
-		i := 49
+		i := *start
 		for{
 			select {
 			
@@ -90,7 +95,7 @@ func main(){
 			}
 
 			i++
-			if i > 500{
+			if i > *stop{
 				Info.Println("have gotten the 25w users.")
 				break
 			}
