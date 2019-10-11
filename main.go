@@ -24,6 +24,7 @@ func main(){
 
 	start := flag.Int("start",1,"起始页")
 	stop := flag.Int("stop",1,"终止页")
+	minasset := flag.Float64("minasset",1.0,"过滤的最小资产")
 
 	flag.Parse()
 	u := url.URL{Scheme:"wss",Host:"api-v1.eosflare.io",Path:"/socket.io/",}
@@ -164,6 +165,13 @@ func main(){
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
 					for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
+
+						
+						liquid := x.(map[string]interface{})["liquidity"].(float64)
+						if liquid < *minasset{
+							Info.Println("it's the small account")
+							break
+						}
 						err = rc.SAdd("forloopsend",x.(map[string]interface{})["owner"].(string)).Err()
 						if err != nil {
 							Info.Println("get errors ??...",err)
