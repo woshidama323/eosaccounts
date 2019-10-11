@@ -138,7 +138,7 @@ func main(){
 
 		switch m := out.(type){
 		case map[string]interface {}:
-			Info.Println("....",m)
+			// Info.Println("....",m)
 
 			if v,ok := out.(map[string]interface{})["sid"];ok{
 				Info.Println("start msg",v)
