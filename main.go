@@ -169,8 +169,8 @@ func main(){
 						
 						liquid := x.(map[string]interface{})["liquidity"].(float64)
 						if liquid < *minasset{
-							Info.Println("it's the small account")
-							break
+							Info.Println("it's the small account: ",x)
+							continue
 						}
 						err = rc.SAdd("forloopsend",x.(map[string]interface{})["owner"].(string)).Err()
 						if err != nil {
