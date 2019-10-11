@@ -7,7 +7,7 @@ sudo : required
 
 env : 
   - GO111MODULE=on
-  
+
 install : 
   - echo "install"
 
@@ -15,3 +15,12 @@ install :
 script : 
  - echo "script"
  - go test -v ./...
+ - go build -o geteosaccount .
+
+ deploy:
+  provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: geteosaccount
+  skip_cleanup: true
+  on:
+    tags: true

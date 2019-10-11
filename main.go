@@ -74,6 +74,7 @@ func main(){
 	tc2 := time.NewTicker(time.Second * 3)
 	go func(){
 		i := *start
+		Info.Println(".....start....",i)
 		for{
 			select {
 			
@@ -95,6 +96,8 @@ func main(){
 			}
 
 			i++
+			Info.Println(".....monitor....",i)
+			Info.Println(".....compare stop....",*stop)
 			if i > *stop{
 				Info.Println("have gotten the 25w users.")
 				break
