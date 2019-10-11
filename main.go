@@ -117,7 +117,7 @@ func main(){
 		if err != nil {
 			Info.Println("failed to get the message..",err)
 		}
-		Info.Println(".....++++++++",string(msg))
+		// Info.Println(".....++++++++",string(msg))
 
 		var out interface{}
 
