@@ -24,7 +24,7 @@ func init(){
 var (
 	get_user_whales = "{\\\"_url\\\":\\\"/chain/get_user_whales\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
 	get_user_whales_with_token = "{\\\"_url\\\":\\\"/chain/get_token_holder_ranks\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
-	commonurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"total\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+	commonurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"liquidity\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
 	tokenurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"balance\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
 )
 func main(){
