@@ -7,5 +7,5 @@ sudo : required
 install : 
   - echo "install"
 
-script : 
+script : go test
  - echo "script"
