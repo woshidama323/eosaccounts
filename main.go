@@ -23,7 +23,7 @@ func init(){
 func main(){
 
 	start := flag.Int("start",1,"起始页")
-	stop := flag.Int("stop",500,"终止页")
+	stop := flag.Int("stop",1,"终止页")
 
 	flag.Parse()
 	u := url.URL{Scheme:"wss",Host:"api-v1.eosflare.io",Path:"/socket.io/",}
