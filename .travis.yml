@@ -22,5 +22,4 @@ script :
   api_key: e59503369344ed21b3e20d30d33c22dbdc3ae0d0
   file: geteosaccount
   skip_cleanup: true
-  on:
-    tags: true
+  draft: true
