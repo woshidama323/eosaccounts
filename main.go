@@ -20,11 +20,23 @@ var (
 func init(){
 	Info = log.New(os.Stdout,"Info:",log.Ldate | log.Ltime | log.Lshortfile)
 }
+
+var (
+	get_user_whales = "{\\\"_url\\\":\\\"/chain/get_user_whales\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
+	get_user_whales_with_token = "{\\\"_url\\\":\\\"/chain/get_token_holder_ranks\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
+	commonurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"total\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+	tokenurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"balance\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+)
 func main(){
 
 	start := flag.Int("start",1,"起始页")
 	stop := flag.Int("stop",1,"终止页")
 	minasset := flag.Float64("minasset",1.0,"过滤的最小资产")
+	con := flag.String("contract","","checking for a contract token")
+	symbol := flag.String("symbol","","the token name")
+
+	rediskey := flag.String("rediskey","forloopsend","a key for storing the msg to redis")
+
 
 	flag.Parse()
 	u := url.URL{Scheme:"wss",Host:"api-v1.eosflare.io",Path:"/socket.io/",}
@@ -84,10 +96,16 @@ func main(){
 
 				// ["message","{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":1,\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"]
 
-				jsonstr := "{\\\"_url\\\":\\\"/chain/get_user_whales\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":" + strconv.FormatInt(int64(i),10) + ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"total\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+				jsonstr := ""
+				if *con == ""{
+					jsonstr = get_user_whales + strconv.FormatInt(int64(i),10) + commonurl
+				}else{
+					jsonstr = get_user_whales_with_token + strconv.FormatInt(int64(i),10) + "," + "\\\"contract\\\":\\\"" + *con + "\\\"" + ","+ "\\\"symbol\\\":\\\"" + *symbol  + "\\\""  + tokenurl
+				}
+				
 				reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
 
-				Info.Println(reqstr)
+				Info.Println("final.request..",reqstr)
 				err = c.WriteMessage(websocket.TextMessage,[]byte(reqstr))
 				
 				if err != nil {
@@ -160,19 +178,24 @@ func main(){
 					})
 
 					getholder := input.([]interface{})[1].(string)
-					// Info.Println(getholder)
+					Info.Println(getholder)
 
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
 					for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
 
+						liquid := 1.0
+						if *con != ""{
+							liquid = x.(map[string]interface{})["balance"].(float64)
+						}else{
+							liquid = x.(map[string]interface{})["liquidity"].(float64)
+						}
 						
-						liquid := x.(map[string]interface{})["liquidity"].(float64)
 						if liquid < *minasset{
 							Info.Println("it's the small account: ",x)
 							continue
 						}
-						err = rc.SAdd("forloopsend",x.(map[string]interface{})["owner"].(string)).Err()
+						err = rc.SAdd(*rediskey,x.(map[string]interface{})["owner"].(string)).Err()
 						if err != nil {
 							Info.Println("get errors ??...",err)
 							panic(err)
