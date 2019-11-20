@@ -135,6 +135,15 @@ func main(){
 		_,msg,err := c.ReadMessage()
 		if err != nil {
 			Info.Println("failed to get the message..",err)
+			//如果链接中断，重新链接
+			c, _, err = websocket.DefaultDialer.Dial(urlstr, nil)
+			if err != nil{
+				//链接失败blockchain
+				Info.Println("......",err)
+				time.Sleep(1)
+				continue
+			}
+
 		}
 		// Info.Println(".....++++++++",string(msg))
 
