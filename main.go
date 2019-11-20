@@ -182,6 +182,10 @@ func main(){
 
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
+					if (test.(map[string]interface{})["holders"] == nil ){
+						Info.Println("something wrong with it ..",test)
+						return
+					}
 					for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
 
 						liquid := 1.0
