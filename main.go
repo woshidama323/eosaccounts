@@ -169,8 +169,8 @@ func main(){
 
 					if value,ok := test.(map[string]interface{})["actions"]; ok {
 						// Info.Println("something wrong with it ..",value)
-						for i := range value.([]interface{}){
-							Info.Println("++++++",i)
+						for i,item := range value.([]interface{}){
+							Info.Println("++++++",item)
 						}
 					}
 					// if (test.(map[string]interface{})["actions"] == nil ){
