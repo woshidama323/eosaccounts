@@ -166,12 +166,12 @@ func main(){
 
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
-					Info.Println("current ...",test)
+					// Info.Println("current ...",test)
 					if value,ok := test.(map[string]interface{})["actions"]; ok {
 						// Info.Println("something wrong with it ..",value)
 						for _,item := range value.([]interface{}){
 							Info.Println("the time is .....",item.(map[string]interface{})["datetime"].(uint64))
-							if (item.(map[string]interface{})["datetime"].(uint64) < 1570723199000 ){
+							if (item.(map[string]interface{})["datetime"].(float64) < float64(1570723199000) ){
 								Info.Println("++++++",item)
 							}
 							
