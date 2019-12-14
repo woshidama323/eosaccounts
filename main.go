@@ -58,7 +58,7 @@ func main(){
 
 	defer c.Close()
 
-	tc2 := time.NewTicker(time.Second * 3)
+	tc2 := time.NewTicker(time.Second * 2)
 	go func(){
 		i := *start
 		Info.Println(".....start....",i)
