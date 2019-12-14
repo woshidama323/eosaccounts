@@ -171,7 +171,7 @@ func main(){
 						// Info.Println("something wrong with it ..",value)
 						for _,item := range value.([]interface{}){
 
-							if (item.datetime < 1570723199000 ){
+							if (item.(map[string]interface{})["datetime"] < 1570723199000 ){
 								Info.Println("++++++",item)
 							}
 							
