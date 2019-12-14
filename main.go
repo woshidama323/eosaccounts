@@ -190,7 +190,7 @@ func main(){
 					// 	}
 					// }
 
-				// }(out)
+				}(out)
 
 		default:
 			Info.Println("Unsupported message", m)
