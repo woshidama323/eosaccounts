@@ -22,10 +22,14 @@ func init(){
 }
 
 var (
-	get_user_whales = "{\\\"_url\\\":\\\"/chain/get_user_whales\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
-	get_user_whales_with_token = "{\\\"_url\\\":\\\"/chain/get_token_holder_ranks\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
-	commonurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"liquidity\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
-	tokenurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"balance\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+	get_transaction = "{\\\"_url\\\":\\\"/chain/get_account_actions\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
+	// commonurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"liquidity\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+	commonurl = ",\\\"account\\\":\\\"defindinside\\\",\\\"contract_account\\\":\\\"\\\",\\\"contract_name\\\":\\\"\\\",\\\"filterSpam\\\":true,\\\"limit\\\":500,\\\"lang\\\":\\\"zh-CN\\\"}"
+
+					// "{\"_url\":\"/chain/get_account_actions\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"account\":\"defindinside\",\"contract_account\":\"\",\"contract_name\":\"\",\"filterSpam\":true,\"limit\":500,\"lang\":\"zh-CN\"}
+
+
+					
 )
 func main(){
 
@@ -54,36 +58,6 @@ func main(){
 
 	defer c.Close()
 
-	// tc := time.NewTicker(time.Second * 5)
-	// go func(){
-	// 	i := 0
-	// 	for{
-	// 		select {
-			
-	// 		case t := <-tc.C:
-	// 			Info.Println("=====",t)
-	// 			err := c.WriteMessage(websocket.TextMessage,[]byte("2"))
-	// 			if err != nil {
-	// 				Info.Println("failed to send the ping message ",err)
-	// 			}
-
-	// 			// ["message","{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":1,\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"]
-
-	// 			// jsonstr := "{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":" + string(i) + ",\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"
-	// 			// reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
-	// 			// err = c.WriteMessage(websocket.TextMessage,[]byte(reqstr))
-				
-	// 			// if err != nil {
-	// 			// 	Info.Println("..........**,.....",err)
-	// 			// }
-			
-	// 		}
-
-	// 		i++
-	// 	}
-	// }()
-
-
 	tc2 := time.NewTicker(time.Second * 3)
 	go func(){
 		i := *start
@@ -95,13 +69,14 @@ func main(){
 				Info.Println("=====",t)
 
 				// ["message","{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":1,\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"]
-
+				// "{\"_url\":\"/chain/get_account_actions\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"account\":\"defindinside\",\"contract_account\":\"\",\"contract_name\":\"\",\"filterSpam\":true,\"page\":0,\"limit\":50,\"lang\":\"zh-CN\"}
 				jsonstr := ""
-				if *con == ""{
-					jsonstr = get_user_whales + strconv.FormatInt(int64(i),10) + commonurl
-				}else{
-					jsonstr = get_user_whales_with_token + strconv.FormatInt(int64(i),10) + "," + "\\\"contract\\\":\\\"" + *con + "\\\"" + ","+ "\\\"symbol\\\":\\\"" + *symbol  + "\\\""  + tokenurl
-				}
+				// if *con == ""{
+				// 	jsonstr = get_user_whales + strconv.FormatInt(int64(i),10) + commonurl
+				// }else{
+				// 	jsonstr = get_user_whales_with_token + strconv.FormatInt(int64(i),10) + "," + "\\\"contract\\\":\\\"" + *con + "\\\"" + ","+ "\\\"symbol\\\":\\\"" + *symbol  + "\\\""  + tokenurl
+				// }
+				jsonstr = get_transaction + strconv.FormatInt(int64(i),10) + commonurl
 				
 				reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
 
@@ -180,14 +155,14 @@ func main(){
 				// Info.Println("______",out)
 				go func(input interface{}){
 					// 
-					rc := redis.NewClient(&redis.Options{
-						Addr:     "localhost:6379",
-						Password: "", // no password set
-						DB:       14,//14,  // use default DB
-					})
+					// rc := redis.NewClient(&redis.Options{
+					// 	Addr:     "localhost:6379",
+					// 	Password: "", // no password set
+					// 	DB:       14,//14,  // use default DB
+					// })
 
 					getholder := input.([]interface{})[1].(string)
-					// Info.Println(getholder)
+					Info.Println(getholder)
 
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
@@ -195,27 +170,27 @@ func main(){
 						Info.Println("something wrong with it ..",test)
 						return
 					}
-					for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
+					// for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
 
-						liquid := 1.0
-						if *con != ""{
-							liquid = x.(map[string]interface{})["balance"].(float64)
-						}else{
-							liquid = x.(map[string]interface{})["liquidity"].(float64)
-						}
+					// 	liquid := 1.0
+					// 	if *con != ""{
+					// 		liquid = x.(map[string]interface{})["balance"].(float64)
+					// 	}else{
+					// 		liquid = x.(map[string]interface{})["liquidity"].(float64)
+					// 	}
 						
-						if liquid < *minasset{
-							Info.Println("it's the small account: ",x)
-							continue
-						}
-						err = rc.SAdd(*rediskey,x.(map[string]interface{})["owner"].(string)).Err()
-						if err != nil {
-							Info.Println("get errors ??...",err)
-							panic(err)
-						}
-					}
+					// 	if liquid < *minasset{
+					// 		Info.Println("it's the small account: ",x)
+					// 		continue
+					// 	}
+					// 	err = rc.SAdd(*rediskey,x.(map[string]interface{})["owner"].(string)).Err()
+					// 	if err != nil {
+					// 		Info.Println("get errors ??...",err)
+					// 		panic(err)
+					// 	}
+					// }
 
-				}(out)
+				// }(out)
 
 		default:
 			Info.Println("Unsupported message", m)
