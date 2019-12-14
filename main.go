@@ -166,7 +166,7 @@ func main(){
 
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
-					if (test.(map[string]interface{})["holders"] == nil ){
+					if (test.(map[string]interface{})["actions"] == nil ){
 						Info.Println("something wrong with it ..",test)
 						return
 					}
