@@ -70,13 +70,13 @@ func main(){
 
 				// ["message","{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":1,\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"]
 				// "{\"_url\":\"/chain/get_account_actions\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"account\":\"defindinside\",\"contract_account\":\"\",\"contract_name\":\"\",\"filterSpam\":true,\"page\":0,\"limit\":50,\"lang\":\"zh-CN\"}
-				jsonstr := ""
+				// jsonstr := ""
 				// if *con == ""{
 				// 	jsonstr = get_user_whales + strconv.FormatInt(int64(i),10) + commonurl
 				// }else{
 				// 	jsonstr = get_user_whales_with_token + strconv.FormatInt(int64(i),10) + "," + "\\\"contract\\\":\\\"" + *con + "\\\"" + ","+ "\\\"symbol\\\":\\\"" + *symbol  + "\\\""  + tokenurl
 				// }
-				jsonstr = get_transaction + strconv.FormatInt(int64(i),10) + commonurl
+				jsonstr := get_transaction + strconv.FormatInt(int64(i),10) + commonurl
 				
 				reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
 
@@ -120,7 +120,7 @@ func main(){
 			}
 
 		}
-		Info.Println(".....++++++++",string(msg))
+		// Info.Println(".....++++++++",string(msg))
 
 		var out interface{}
 
