@@ -162,7 +162,7 @@ func main(){
 					// })
 
 					getholder := input.([]interface{})[1].(string)
-					Info.Println(getholder)
+					// Info.Println(getholder)
 
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
