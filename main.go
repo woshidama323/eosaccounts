@@ -167,7 +167,7 @@ func main(){
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
 
-					value,ok = test.(map[string]interface{})["actions"];if ok {
+					if value,ok := test.(map[string]interface{})["actions"]; ok {
 						// Info.Println("something wrong with it ..",value)
 						for i := range value.([]interface{}){
 							Info.Println("++++++",i)
