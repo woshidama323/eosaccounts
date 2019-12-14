@@ -42,7 +42,7 @@ func main(){
 	// rediskey := flag.String("rediskey","forloopsend","a key for storing the msg to redis")
 
 
-	// flag.Parse()
+	flag.Parse()
 	u := url.URL{Scheme:"wss",Host:"api-v1.eosflare.io",Path:"/socket.io/",}
 	v := url.Values{}
 	v.Add("EIO","3")
