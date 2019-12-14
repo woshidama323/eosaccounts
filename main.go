@@ -8,7 +8,7 @@ import (
 	// "regexp"
 	"os"
 	"strconv"
-	"github.com/go-redis/redis"
+	// "github.com/go-redis/redis"
 	"flag"
 )
 var (
