@@ -166,10 +166,17 @@ func main(){
 
 					var test interface{}
 					json.Unmarshal([]byte(getholder),&test)
-					if (test.(map[string]interface{})["actions"] == nil ){
-						Info.Println("something wrong with it ..",test)
-						return
+
+					value,ok = test.(map[string]interface{})["actions"];if ok {
+						// Info.Println("something wrong with it ..",value)
+						for i := range value.([]interface{}){
+							Info.Println("++++++",i)
+						}
 					}
+					// if (test.(map[string]interface{})["actions"] == nil ){
+					// 	Info.Println("something wrong with it ..",test)
+					// 	return
+					// // }
 					// for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
 
 					// 	liquid := 1.0
