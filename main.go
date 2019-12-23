@@ -31,7 +31,7 @@ var (
 	get_user_whales            = "{\\\"_url\\\":\\\"/chain/get_account_actions\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
 	get_user_whales_with_token = "{\\\"_url\\\":\\\"/chain/get_token_holder_ranks\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
 	commonurl                  = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"liquidity\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
-	tokenurl                   = ",\\\"contract_account\\\":\\\"\\\",\\\"contract_name\\\":\\\"\\\",\\\"filterSpam\\\":true,\\\"limit\\\":500,\\\"lang\\\":\\\"zh-CN\\\"}"
+	tokenurl                   = ",\\\"contract_account\\\":\\\"\\\",\\\"contract_name\\\":\\\"\\\",\\\"filterSpam\\\":true,\\\"limit\\\":50,\\\"lang\\\":\\\"zh-CN\\\"}"
 )
 
 // \"account\":\"newdexpublic\",\"contract_account\":\"\",\"contract_name\":\"\",\"filterSpam\":true,\"page\":0,\"limit\":500,\"lang\":\"zh-CN\"}"]
@@ -132,6 +132,9 @@ func main() {
 		// 	continue
 
 		// }else
+		if len(msg) < 2 {
+			continue
+		}
 		if string(msg[:2]) == "42" {
 			Info.Println("accounts msg")
 			err := json.Unmarshal(msg[2:], &out)
