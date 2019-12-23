@@ -184,7 +184,7 @@ func main() {
 								Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["info"])
 								doc,err := html.Parse(vv.(map[string]interface{})["info"])
 								if err != nil {
-									Info.Println(failed to get doc)
+									Info.Println("failed to get doc")
 								}
 								var f func(*html.Node)
                                 f = func(n *html.Node) {
