@@ -174,7 +174,10 @@ func main() {
 				var test interface{}
 				json.Unmarshal([]byte(getholder), &test)
 				if test.(map[string]interface{})["holders"] == nil {
-					Info.Println("something wrong with it ..", test)
+					// Info.Println("something wrong with it ..", test)
+					for k, v := range test.(map[string]interface{}) {
+						Info.Println("k:", k, "~~v:", v)
+					}
 					return
 				}
 				for _, x := range test.(map[string]interface{})["holders"].([]interface{}) {
