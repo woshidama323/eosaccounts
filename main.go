@@ -180,7 +180,7 @@ func main() {
 
 						if k == "actions" {
 							for kk, vv := range v.([]interface{}) {
-								Info.Println("kk:", kk, "~~vv:", vv)
+								Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["info"])
 							}
 						}
 
