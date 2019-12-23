@@ -127,14 +127,15 @@ func main() {
 
 		var out interface{}
 
+		if len(msg) < 2 {
+			continue
+		}
+
 		if string(msg[:1]) == "0" {
 			Info.Println("ping pong msg:", string(msg))
 			continue
 		}
 
-		if len(msg) < 2 {
-			continue
-		}
 		if string(msg[:2]) == "42" {
 			Info.Println("accounts msg")
 			err := json.Unmarshal(msg[2:], &out)
