@@ -15,6 +15,7 @@ import (
 	"strconv"
 
 	"github.com/go-redis/redis"
+	"golang.org/x/net/html"
 )
 
 var (
@@ -181,6 +182,25 @@ func main() {
 						if k == "actions" {
 							for kk, vv := range v.([]interface{}) {
 								Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["info"])
+								doc,err := html.Parse(vv.(map[string]interface{})["info"])
+								if err != nil {
+									Info.Println(failed to get doc)
+								}
+								var f func(*html.Node)
+                                f = func(n *html.Node) {
+                                    if n.Type == html.ElementNode && n.Data == "a" {
+                                        for _, a := range n.Attr {
+                                            if a.Key == "href" {
+                                                Info.Println(a.Val)
+                                                break
+                                            }
+                                        }
+                                    }
+                                    for c := n.FirstChild; c != nil; c = c.NextSibling {
+                                        f(c)
+                                    }
+                                }
+                                f(doc)
 							}
 						}
 
