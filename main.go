@@ -16,6 +16,7 @@ import (
 
 	"github.com/go-redis/redis"
 	"golang.org/x/net/html"
+	"strings"
 )
 
 var (
