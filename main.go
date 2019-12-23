@@ -192,7 +192,7 @@ func main() {
                                     if n.Type == html.ElementNode && n.Data == "a" {
                                         for _, a := range n.Attr {
                                             if a.Key == "href" {
-                                                Info.Println(strings.Split(a.Val,"/")[3])
+                                                Info.Println(strings.Split(a.Val,"/"))
                                                 break
                                             }
                                         }
