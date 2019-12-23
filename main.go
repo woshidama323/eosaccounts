@@ -177,6 +177,13 @@ func main() {
 					// Info.Println("something wrong with it ..", test)
 					for k, v := range test.(map[string]interface{}) {
 						Info.Println("k:", k, "~~v:", v)
+						switch v.(type) {
+						case map[string]interface{}:
+							for kk, vv := range v.(map[string]interface{}) {
+								Info.Println("kk:", kk, "~~vv:", vv)
+							}
+						}
+
 					}
 					return
 				}
