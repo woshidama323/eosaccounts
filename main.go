@@ -42,7 +42,7 @@ func main() {
 	stop := flag.Int("stop", 1, "终止页")
 	minasset := flag.Float64("minasset", 1.0, "过滤的最小资产")
 	con := flag.String("contract", "", "checking for a contract token")
-	symbol := flag.String("symbol", "", "the token name")
+	// symbol := flag.String("symbol", "", "the token name")
 
 	rediskey := flag.String("rediskey", "forloopsend", "a key for storing the msg to redis")
 
