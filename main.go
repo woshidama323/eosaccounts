@@ -183,6 +183,9 @@ func main() {
 						if k == "actions" {
 							for kk, vv := range v.([]interface{}) {
 								Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["info"])
+								vv.(map[string]interface{})["type"] != "Sent" {
+                                    continue
+								}
 								doc,err := html.Parse(strings.NewReader(vv.(map[string]interface{})["info"].(string)))
 								if err != nil {
 									Info.Println("failed to get doc")
