@@ -208,7 +208,7 @@ func main(){
 							Info.Println("it's the small account: ",x)
 							continue
 						}
-						storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(v, 'f', -1, 64)
+						storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(liquid, 'f', -1, 64)
 						Info.Println("....._+_+_+",storestr)
 						err = rc.SAdd(*rediskey,storestr).Err()
 						if err != nil {
