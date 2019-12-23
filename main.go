@@ -28,11 +28,13 @@ func init() {
 }
 
 var (
-	get_user_whales            = "{\\\"_url\\\":\\\"/chain/get_user_whales\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
+	get_user_whales            = "{\\\"_url\\\":\\\"/chain/get_account_actions\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
 	get_user_whales_with_token = "{\\\"_url\\\":\\\"/chain/get_token_holder_ranks\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
 	commonurl                  = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"liquidity\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
-	tokenurl                   = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"balance\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+	tokenurl                   = ",\\\"contract_account\\\":\\\"\\\",\\\"contract_name\\\":\\\"\\\",\\\"filterSpam\\\":true,\\\"limit\\\":500,\\\"lang\\\":\\\"zh-CN\\\"}"
 )
+
+// \"account\":\"newdexpublic\",\"contract_account\":\"\",\"contract_name\":\"\",\"filterSpam\":true,\"page\":0,\"limit\":500,\"lang\":\"zh-CN\"}"]
 
 func main() {
 
@@ -63,35 +65,6 @@ func main() {
 
 	defer c.Close()
 
-	// tc := time.NewTicker(time.Second * 5)
-	// go func(){
-	// 	i := 0
-	// 	for{
-	// 		select {
-
-	// 		case t := <-tc.C:
-	// 			Info.Println("=====",t)
-	// 			err := c.WriteMessage(websocket.TextMessage,[]byte("2"))
-	// 			if err != nil {
-	// 				Info.Println("failed to send the ping message ",err)
-	// 			}
-
-	// 			// ["message","{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":1,\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"]
-
-	// 			// jsonstr := "{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":" + string(i) + ",\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"
-	// 			// reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
-	// 			// err = c.WriteMessage(websocket.TextMessage,[]byte(reqstr))
-
-	// 			// if err != nil {
-	// 			// 	Info.Println("..........**,.....",err)
-	// 			// }
-
-	// 		}
-
-	// 		i++
-	// 	}
-	// }()
-
 	tc2 := time.NewTicker(time.Second * 3)
 	go func() {
 		i := *start
@@ -104,12 +77,7 @@ func main() {
 
 				// ["message","{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":1,\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"]
 
-				jsonstr := ""
-				if *con == "" {
-					jsonstr = get_user_whales + strconv.FormatInt(int64(i), 10) + commonurl
-				} else {
-					jsonstr = get_user_whales_with_token + strconv.FormatInt(int64(i), 10) + "," + "\\\"contract\\\":\\\"" + *con + "\\\"" + "," + "\\\"symbol\\\":\\\"" + *symbol + "\\\"" + tokenurl
-				}
+				jsonstr := get_user_whales + strconv.FormatInt(int64(i), 10) + "," + "\\\"account\\\":\\\"" + *con + "\\\"" + tokenurl
 
 				reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
 
