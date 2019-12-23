@@ -1,0 +1,69 @@
+{
+	"folders": [
+		{
+			"path": "/Users/mk/Documents/paper/contractdefind"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/codelearning"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/WebSockets.jl"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/HTTP.jl"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/gocryptotrader"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/DevOpsPractice"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/filesasync"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/JSON3.jl"
+		},
+		{
+			"path": "/Users/mk/Documents/paper/StrategySystem"
+		},
+		{
+			"path": "/Users/mk/eos"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"__hash_table": "cpp",
+			"__split_buffer": "cpp",
+			"__tree": "cpp",
+			"array": "cpp",
+			"bitset": "cpp",
+			"string_view": "cpp",
+			"initializer_list": "cpp",
+			"iterator": "cpp",
+			"map": "cpp",
+			"string": "cpp",
+			"unordered_map": "cpp",
+			"utility": "cpp",
+			"vector": "cpp",
+			"hashtable": "cpp",
+			"__bit_reference": "cpp",
+			"__functional_base": "cpp",
+			"algorithm": "cpp",
+			"atomic": "cpp",
+			"chrono": "cpp",
+			"__memory": "cpp",
+			"optional": "cpp",
+			"functional": "cpp",
+			"limits": "cpp",
+			"memory": "cpp",
+			"ratio": "cpp",
+			"system_error": "cpp",
+			"tuple": "cpp",
+			"type_traits": "cpp"
+		}
+	}
+}
