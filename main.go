@@ -1,55 +1,64 @@
 package main
+
 import (
-	"github.com/gorilla/websocket"
-	"log"
-	"time"
-	"net/url"
 	"encoding/json"
+	"log"
+	"net/http"
+	"net/url"
+	"time"
+
+	"github.com/gorilla/websocket"
+
 	// "regexp"
+	"flag"
 	"os"
 	"strconv"
+
 	"github.com/go-redis/redis"
-	"flag"
 )
+
 var (
 	Info    *log.Logger
 	Warning *log.Logger
 	Error   *log.Logger
 )
 
-func init(){
-	Info = log.New(os.Stdout,"Info:",log.Ldate | log.Ltime | log.Lshortfile)
+func init() {
+	Info = log.New(os.Stdout, "Info:", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 var (
-	get_user_whales = "{\\\"_url\\\":\\\"/chain/get_user_whales\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
+	get_user_whales            = "{\\\"_url\\\":\\\"/chain/get_user_whales\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
 	get_user_whales_with_token = "{\\\"_url\\\":\\\"/chain/get_token_holder_ranks\\\",\\\"_method\\\":\\\"POST\\\",\\\"_headers\\\":{\\\"content-type\\\":\\\"application/json\\\"},\\\"page\\\":"
-	commonurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"liquidity\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
-	tokenurl = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"balance\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+	commonurl                  = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"liquidity\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
+	tokenurl                   = ",\\\"limit\\\":500,\\\"sortBy\\\":\\\"balance\\\",\\\"ascending\\\":false,\\\"lang\\\":\\\"zh-CN\\\"}"
 )
-func main(){
 
-	start := flag.Int("start",1,"起始页")
-	stop := flag.Int("stop",1,"终止页")
-	minasset := flag.Float64("minasset",1.0,"过滤的最小资产")
-	con := flag.String("contract","","checking for a contract token")
-	symbol := flag.String("symbol","","the token name")
+func main() {
 
-	rediskey := flag.String("rediskey","forloopsend","a key for storing the msg to redis")
+	start := flag.Int("start", 1, "起始页")
+	stop := flag.Int("stop", 1, "终止页")
+	minasset := flag.Float64("minasset", 1.0, "过滤的最小资产")
+	con := flag.String("contract", "", "checking for a contract token")
+	symbol := flag.String("symbol", "", "the token name")
 
+	rediskey := flag.String("rediskey", "forloopsend", "a key for storing the msg to redis")
 
 	flag.Parse()
-	u := url.URL{Scheme:"wss",Host:"api-v1.eosflare.io",Path:"/socket.io/",}
+	u := url.URL{Scheme: "wss", Host: "api-v1.eosflare.io", Path: "/socket.io/"}
 	v := url.Values{}
-	v.Add("EIO","3")
-	v.Add("transport","websocket")
+	v.Add("EIO", "3")
+	v.Add("transport", "websocket")
 
 	urlstr := u.String() + "?" + v.Encode()
 
-	c, _, err := websocket.DefaultDialer.Dial(urlstr, nil)
-	if err != nil{
+	he := http.Header{}
+	he.Add("origin", "https://eosflare.io")
+	c, _, err := websocket.DefaultDialer.Dial(urlstr, he)
+	if err != nil {
 		//链接失败blockchain
-		Info.Println("......",err)
+		Info.Println("......", err)
+		return
 	}
 
 	defer c.Close()
@@ -59,7 +68,7 @@ func main(){
 	// 	i := 0
 	// 	for{
 	// 		select {
-			
+
 	// 		case t := <-tc.C:
 	// 			Info.Println("=====",t)
 	// 			err := c.WriteMessage(websocket.TextMessage,[]byte("2"))
@@ -72,52 +81,51 @@ func main(){
 	// 			// jsonstr := "{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":" + string(i) + ",\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"
 	// 			// reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
 	// 			// err = c.WriteMessage(websocket.TextMessage,[]byte(reqstr))
-				
+
 	// 			// if err != nil {
 	// 			// 	Info.Println("..........**,.....",err)
 	// 			// }
-			
+
 	// 		}
 
 	// 		i++
 	// 	}
 	// }()
 
-
 	tc2 := time.NewTicker(time.Second * 3)
-	go func(){
+	go func() {
 		i := *start
-		Info.Println(".....start....",i)
-		for{
+		Info.Println(".....start....", i)
+		for {
 			select {
-			
+
 			case t := <-tc2.C:
-				Info.Println("=====",t)
+				Info.Println("=====", t)
 
 				// ["message","{\"_url\":\"/chain/get_user_whales\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":1,\"limit\":500,\"sortBy\":\"total\",\"ascending\":false,\"lang\":\"zh-CN\"}"]
 
 				jsonstr := ""
-				if *con == ""{
-					jsonstr = get_user_whales + strconv.FormatInt(int64(i),10) + commonurl
-				}else{
-					jsonstr = get_user_whales_with_token + strconv.FormatInt(int64(i),10) + "," + "\\\"contract\\\":\\\"" + *con + "\\\"" + ","+ "\\\"symbol\\\":\\\"" + *symbol  + "\\\""  + tokenurl
+				if *con == "" {
+					jsonstr = get_user_whales + strconv.FormatInt(int64(i), 10) + commonurl
+				} else {
+					jsonstr = get_user_whales_with_token + strconv.FormatInt(int64(i), 10) + "," + "\\\"contract\\\":\\\"" + *con + "\\\"" + "," + "\\\"symbol\\\":\\\"" + *symbol + "\\\"" + tokenurl
 				}
-				
+
 				reqstr := "42" + "[\"message\",\"" + jsonstr + "\"]"
 
-				Info.Println("final.request..",reqstr)
-				err = c.WriteMessage(websocket.TextMessage,[]byte(reqstr))
-				
+				Info.Println("final.request..", reqstr)
+				err = c.WriteMessage(websocket.TextMessage, []byte(reqstr))
+
 				if err != nil {
-					Info.Println("..........**,.....",err)
+					Info.Println("..........**,.....", err)
 				}
-			
+
 			}
 
 			i++
-			Info.Println(".....monitor....",i)
-			Info.Println(".....compare stop....",*stop)
-			if i > *stop{
+			Info.Println(".....monitor....", i)
+			Info.Println(".....compare stop....", *stop)
+			if i > *stop {
 				Info.Println("have gotten the 25w users.")
 				break
 			}
@@ -132,14 +140,14 @@ func main(){
 	// }()
 
 	for {
-		_,msg,err := c.ReadMessage()
+		_, msg, err := c.ReadMessage()
 		if err != nil {
-			Info.Println("failed to get the message..",err)
+			Info.Println("failed to get the message..", err)
 			//如果链接中断，重新链接
 			c, _, err = websocket.DefaultDialer.Dial(urlstr, nil)
-			if err != nil{
+			if err != nil {
 				//链接失败blockchain
-				Info.Println("......",err)
+				Info.Println("......", err)
 				time.Sleep(1)
 				continue
 			}
@@ -153,71 +161,71 @@ func main(){
 		// 	Info.Println("ping pong msg:",string(msg))
 		// 	continue
 
-		// }else 
-		if string(msg[:2]) == "42"{
+		// }else
+		if string(msg[:2]) == "42" {
 			Info.Println("accounts msg")
-			err := json.Unmarshal(msg[2:],&out)
-			if err !=nil {
-				Info.Println("failed to unmarshal the bytes",err)
+			err := json.Unmarshal(msg[2:], &out)
+			if err != nil {
+				Info.Println("failed to unmarshal the bytes", err)
 			}
-		}else {
+		} else {
 			continue
 		}
 
-		switch m := out.(type){
-		case map[string]interface {}:
+		switch m := out.(type) {
+		case map[string]interface{}:
 			// Info.Println("....",m)
 
-			if v,ok := out.(map[string]interface{})["sid"];ok{
-				Info.Println("start msg",v)
+			if v, ok := out.(map[string]interface{})["sid"]; ok {
+				Info.Println("start msg", v)
 			}
 
-			// if v2,ok2 := out.(map[string]interface{})["sid"];ok2{
+		// if v2,ok2 := out.(map[string]interface{})["sid"];ok2{
 
-			// 	Info.Println("start msg")
-			// }
-			case []interface{}:
-				// Info.Println("______",out)
-				go func(input interface{}){
-					// 
-					rc := redis.NewClient(&redis.Options{
-						Addr:     "localhost:6379",
-						Password: "", // no password set
-						DB:       14,//14,  // use default DB
-					})
+		// 	Info.Println("start msg")
+		// }
+		case []interface{}:
+			// Info.Println("______",out)
+			go func(input interface{}) {
+				//
+				rc := redis.NewClient(&redis.Options{
+					Addr:     "localhost:6379",
+					Password: "", // no password set
+					DB:       14, //14,  // use default DB
+				})
 
-					getholder := input.([]interface{})[1].(string)
-					// Info.Println(getholder)
+				getholder := input.([]interface{})[1].(string)
+				// Info.Println(getholder)
 
-					var test interface{}
-					json.Unmarshal([]byte(getholder),&test)
-					if (test.(map[string]interface{})["holders"] == nil ){
-						Info.Println("something wrong with it ..",test)
-						return
-					}
-					for _,x := range test.(map[string]interface{})["holders"].([]interface{}){
+				var test interface{}
+				json.Unmarshal([]byte(getholder), &test)
+				if test.(map[string]interface{})["holders"] == nil {
+					Info.Println("something wrong with it ..", test)
+					return
+				}
+				for _, x := range test.(map[string]interface{})["holders"].([]interface{}) {
 
-						liquid := 1.0
-						if *con != ""{
-							liquid = x.(map[string]interface{})["balance"].(float64)
-						}else{
-							liquid = x.(map[string]interface{})["liquidity"].(float64)
-						}
-						
-						if liquid < *minasset{
-							Info.Println("it's the small account: ",x)
-							continue
-						}
-						storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(liquid, 'f', -1, 64)
-						Info.Println("....._+_+_+",storestr)
-						err = rc.SAdd(*rediskey,storestr).Err()
-						if err != nil {
-							Info.Println("get errors ??...",err)
-							panic(err)
-						}
+					liquid := 1.0
+					if *con != "" {
+						liquid = x.(map[string]interface{})["balance"].(float64)
+					} else {
+						liquid = x.(map[string]interface{})["liquidity"].(float64)
 					}
 
-				}(out)
+					if liquid < *minasset {
+						Info.Println("it's the small account: ", x)
+						continue
+					}
+					storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(liquid, 'f', -1, 64)
+					Info.Println("....._+_+_+", storestr)
+					err = rc.SAdd(*rediskey, storestr).Err()
+					if err != nil {
+						Info.Println("get errors ??...", err)
+						panic(err)
+					}
+				}
+
+			}(out)
 
 		default:
 			Info.Println("Unsupported message", m)
