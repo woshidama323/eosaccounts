@@ -208,7 +208,9 @@ func main(){
 							Info.Println("it's the small account: ",x)
 							continue
 						}
-						err = rc.SAdd(*rediskey,x.(map[string]interface{})["owner"].(string)).Err()
+						storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(v, 'f', -1, 64)
+						Info.Println("....._+_+_+",storestr)
+						err = rc.SAdd(*rediskey,storestr).Err()
 						if err != nil {
 							Info.Println("get errors ??...",err)
 							panic(err)
