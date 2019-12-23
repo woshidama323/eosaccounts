@@ -127,11 +127,11 @@ func main() {
 
 		var out interface{}
 
-		// if string(msg[:1]) == "3"{
-		// 	Info.Println("ping pong msg:",string(msg))
-		// 	continue
+		if string(msg[:1]) == "0" {
+			Info.Println("ping pong msg:", string(msg))
+			continue
+		}
 
-		// }else
 		if len(msg) < 2 {
 			continue
 		}
