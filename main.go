@@ -116,6 +116,7 @@ func main() {
 		_, msg, err := c.ReadMessage()
 		if err != nil {
 			Info.Println("failed to get the message..", err)
+			return
 			//如果链接中断，重新链接
 			c, _, err = websocket.DefaultDialer.Dial(urlstr, he)
 			if err != nil {
@@ -123,7 +124,7 @@ func main() {
 				Info.Println("......", err)
 				time.Sleep(1)
 				//希望运行完可以结束掉，这里直接return
-				return
+				continue
 			}
 
 		}
