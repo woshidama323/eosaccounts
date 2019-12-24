@@ -122,7 +122,8 @@ func main() {
 				//链接失败blockchain
 				Info.Println("......", err)
 				time.Sleep(1)
-				continue
+				//希望运行完可以结束掉，这里直接return
+				return
 			}
 
 		}
