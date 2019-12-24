@@ -42,7 +42,7 @@ func main() {
 
 	start := flag.Int("start", 1, "起始页")
 	stop := flag.Int("stop", 1, "终止页")
-	minasset := flag.Float64("minasset", 1.0, "过滤的最小资产")
+	// minasset := flag.Float64("minasset", 1.0, "过滤的最小资产")
 	con := flag.String("contract", "", "checking for a contract token")
 	// symbol := flag.String("symbol", "", "the token name")
 
