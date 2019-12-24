@@ -99,7 +99,8 @@ func main() {
 			Info.Println(".....compare stop....", *stop)
 			if i > *stop {
 				Info.Println("have gotten the 25w users.")
-				break
+				//break
+				return
 			}
 			// break
 		}
