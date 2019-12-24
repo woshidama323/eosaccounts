@@ -177,10 +177,13 @@ func main() {
 				json.Unmarshal([]byte(getholder), &test)
 				if test.(map[string]interface{})["holders"] == nil {
 					// Info.Println("something wrong with it ..", test)
+					rcp := rc.Pipeline()
 					for k, v := range test.(map[string]interface{}) {
 						Info.Println("k:", k, "~~v:", v)
 
 						if k == "actions" {
+							//建立pipe
+							
 							for kk, vv := range v.([]interface{}) {
 								Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["info"])
 								if vv.(map[string]interface{})["type"] != "Sent" {
@@ -195,7 +198,8 @@ func main() {
                                     if n.Type == html.ElementNode && n.Data == "a" {
                                         for _, a := range n.Attr {
                                             if a.Key == "href" {
-                                                Info.Println(strings.Split(a.Val,"/")[2])
+												Info.Println(strings.Split(a.Val,"/")[2])
+												rcp.SAdd(*rediskey,strings.Split(a.Val,"/")[2])
                                                 break
                                             }
                                         }
@@ -209,29 +213,33 @@ func main() {
 						}
 
 					}
-					return
-				}
-				for _, x := range test.(map[string]interface{})["holders"].([]interface{}) {
-
-					liquid := 1.0
-					if *con != "" {
-						liquid = x.(map[string]interface{})["balance"].(float64)
-					} else {
-						liquid = x.(map[string]interface{})["liquidity"].(float64)
-					}
-
-					if liquid < *minasset {
-						Info.Println("it's the small account: ", x)
-						continue
-					}
-					storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(liquid, 'f', -1, 64)
-					Info.Println("....._+_+_+", storestr)
-					err = rc.SAdd(*rediskey, storestr).Err()
-					if err != nil {
-						Info.Println("get errors ??...", err)
+					_, err := rcp.Exec()
+					if err !=nil {
 						panic(err)
 					}
+					return
 				}
+				// for _, x := range test.(map[string]interface{})["holders"].([]interface{}) {
+
+				// 	liquid := 1.0
+				// 	if *con != "" {
+				// 		liquid = x.(map[string]interface{})["balance"].(float64)
+				// 	} else {
+				// 		liquid = x.(map[string]interface{})["liquidity"].(float64)
+				// 	}
+
+				// 	if liquid < *minasset {
+				// 		Info.Println("it's the small account: ", x)
+				// 		continue
+				// 	}
+				// 	storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(liquid, 'f', -1, 64)
+				// 	Info.Println("....._+_+_+", storestr)
+				// 	err = rc.SAdd(*rediskey, storestr).Err()
+				// 	if err != nil {
+				// 		Info.Println("get errors ??...", err)
+				// 		panic(err)
+				// 	}
+				// }
 
 			}(out)
 
