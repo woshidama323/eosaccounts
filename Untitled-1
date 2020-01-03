@@ -6,3 +6,21 @@
 curl 'https://api.binance.com/api/v3/depth?symbol=BTCUSDT' -H 'authority: api.binance.com' -H 'cache-control: max-age=0' -H 'upgrade-insecure-requests: 1' -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Mobile Safari/537.36' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3' -H 'sec-fetch-site: cross-site' -H 'sec-fetch-mode: navigate' -H 'accept-encoding: gzip, deflate, br' -H 'accept-language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,fr;q=0.6' --compressed
 
 curl 'https://api.binance.com/api/v3/depth?symbol=BTCUSDT' -H 'authority: api.binance.com' -H 'accept-encoding: gzip, deflate, br' -H 'accept-language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7,fr;q=0.6' --compressed
+
+
+
+
+
+42["message","{\"_url\":\"/chain/get_account\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"account\":\"newdexpublic\",\"lang\":\"zh-CN\"}"]
+
+42["message","{\"_url\":\"/chain/get_account_actions\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"account\":\"newdexpublic\",\"contract_account\":\"\",\"contract_name\":\"\",\"filterSpam\":true,\"page\":0,\"limit\":50,\"lang\":\"zh-CN\"}"]
+
+
+
+
+
+
+42["message","{\"_url\":\"/chain/get_account_actions\",\"_method\":\"POST\",\"_headers\":{\"content-type\":\"application/json\"},\"page\":7,\"account\":\"\",\"contract_account\":\"\",\"contract_name\":\"\",\"filterSpam\":true,\"limit\":50,\"lang\":\"zh-CN\"}"]
+
+
+
