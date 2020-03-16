@@ -151,11 +151,11 @@ func main() {
 			continue
 		}
 
-		switch m := out.(type) {
+		switch out.(type) {
 		case map[string]interface{}:
 			// Info.Println("....",m)
 
-			if v, ok := out.(map[string]interface{})["sid"]; ok {
+			if _, ok := out.(map[string]interface{})["sid"]; ok {
 				//Info.Println("start msg", v)
 			}
 
@@ -187,7 +187,7 @@ func main() {
 						if k == "actions" {
 							//建立pipe
 
-							for kk, vv := range v.([]interface{}) {
+							for _, vv := range v.([]interface{}) {
 								//Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["//Info"])
 								if vv.(map[string]interface{})["type"] != "Sent" {
 									continue
