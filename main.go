@@ -156,15 +156,15 @@ func main() {
 			// Info.Println("....",m)
 
 			if v, ok := out.(map[string]interface{})["sid"]; ok {
-				Info.Println("start msg", v)
+				//Info.Println("start msg", v)
 			}
 
 		// if v2,ok2 := out.(map[string]interface{})["sid"];ok2{
 
-		// 	Info.Println("start msg")
+		// 	//Info.Println("start msg")
 		// }
 		case []interface{}:
-			// Info.Println("______",out)
+			// //Info.Println("______",out)
 			go func(input interface{}) {
 				//
 				rc := redis.NewClient(&redis.Options{
@@ -174,50 +174,50 @@ func main() {
 				})
 
 				getholder := input.([]interface{})[1].(string)
-				// Info.Println(getholder)
+				// //Info.Println(getholder)
 
 				var test interface{}
 				json.Unmarshal([]byte(getholder), &test)
 				if test.(map[string]interface{})["holders"] == nil {
-					// Info.Println("something wrong with it ..", test)
+					// //Info.Println("something wrong with it ..", test)
 					rcp := rc.Pipeline()
 					for k, v := range test.(map[string]interface{}) {
-						Info.Println("k:", k, "~~v:", v)
+						//Info.Println("k:", k, "~~v:", v)
 
 						if k == "actions" {
 							//建立pipe
-							
+
 							for kk, vv := range v.([]interface{}) {
-								Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["info"])
+								//Info.Println("kk:", kk, "~~vv:", vv.(map[string]interface{})["//Info"])
 								if vv.(map[string]interface{})["type"] != "Sent" {
-                                    continue
+									continue
 								}
-								doc,err := html.Parse(strings.NewReader(vv.(map[string]interface{})["info"].(string)))
+								doc, err := html.Parse(strings.NewReader(vv.(map[string]interface{})["//Info"].(string)))
 								if err != nil {
-									Info.Println("failed to get doc")
+									//Info.Println("failed to get doc")
 								}
 								var f func(*html.Node)
-                                f = func(n *html.Node) {
-                                    if n.Type == html.ElementNode && n.Data == "a" {
-                                        for _, a := range n.Attr {
-                                            if a.Key == "href" {
-												Info.Println(strings.Split(a.Val,"/")[2])
-												rcp.SAdd(*rediskey,strings.Split(a.Val,"/")[2])
-                                                break
-                                            }
-                                        }
-                                    }
-                                    for c := n.FirstChild; c != nil; c = c.NextSibling {
-                                        f(c)
-                                    }
-                                }
-                                f(doc)
+								f = func(n *html.Node) {
+									if n.Type == html.ElementNode && n.Data == "a" {
+										for _, a := range n.Attr {
+											if a.Key == "href" {
+												//Info.Println(strings.Split(a.Val,"/")[2])
+												rcp.SAdd(*rediskey, strings.Split(a.Val, "/")[2])
+												break
+											}
+										}
+									}
+									for c := n.FirstChild; c != nil; c = c.NextSibling {
+										f(c)
+									}
+								}
+								f(doc)
 							}
 						}
 
 					}
 					_, err := rcp.Exec()
-					if err !=nil {
+					if err != nil {
 						panic(err)
 					}
 					return
@@ -232,14 +232,14 @@ func main() {
 				// 	}
 
 				// 	if liquid < *minasset {
-				// 		Info.Println("it's the small account: ", x)
+				// 		//Info.Println("it's the small account: ", x)
 				// 		continue
 				// 	}
 				// 	storestr := x.(map[string]interface{})["owner"].(string) + "_" + strconv.FormatFloat(liquid, 'f', -1, 64)
-				// 	Info.Println("....._+_+_+", storestr)
+				// 	//Info.Println("....._+_+_+", storestr)
 				// 	err = rc.SAdd(*rediskey, storestr).Err()
 				// 	if err != nil {
-				// 		Info.Println("get errors ??...", err)
+				// 		//Info.Println("get errors ??...", err)
 				// 		panic(err)
 				// 	}
 				// }
@@ -247,7 +247,7 @@ func main() {
 			}(out)
 
 		default:
-			Info.Println("Unsupported message", m)
+			//Info.Println("Unsupported message", m)
 		}
 	}
 }
